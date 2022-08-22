@@ -4,7 +4,22 @@ const timeList = document.querySelector("#time-list");
 const timeEl = document.querySelector("#time");
 const board = document.querySelector("#board");
 
-let time = 10;
+const colors = [
+  "#FFFFE0",
+  "#FFFF00",
+  "#FF6600",
+  "#FF3333",
+  "#FF99CC",
+  "#FF0099",
+  "#6699FF",
+  "#0066FF",
+  "#66CCFF",
+  "#99FF99",
+  "#66CC33",
+];
+
+let time = 0;
+let score = 0;
 
 startBtn.addEventListener("click", (event) => {
   event.preventDefault();
@@ -19,7 +34,13 @@ timeList.addEventListener("click", (event) => {
   }
 });
 
-startGame(); //
+board.addEventListener("click", (event) => {
+  if (event.target.classList.contains("circle")) {
+    score++;
+    event.target.remove();
+    createRandomCircle();
+  }
+});
 
 function startGame() {
   setInterval(decreaseTime, 1000);
@@ -43,7 +64,10 @@ function setTime(value) {
   timeEl.innerHTML = `00:${value}`;
 }
 
-function finishGame() {}
+function finishGame() {
+  timeEl.parentNode.classList.add("hide");
+  board.innerHTML = `<h1>Счет: <span class="primary">${score}</span><h1>`;
+}
 
 function createRandomCircle() {
   const circle = document.createElement("div");
@@ -57,9 +81,17 @@ function createRandomCircle() {
   circle.style.top = `${y}px`;
   circle.style.left = `${x}px`;
 
+  const color = getRandomColor();
+  circle.style.background = color;
+
   board.append(circle);
 }
 
 function getRandomNumber(max, min) {
   return Math.round(Math.random() * (max - min) + min);
+}
+
+function getRandomColor() {
+  const index = Math.floor(Math.random() * colors.length);
+  return colors[index];
 }
